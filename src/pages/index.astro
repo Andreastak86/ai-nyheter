@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import '../styles/global.css';
 
 const updates = (await getCollection('updates')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
@@ -9,26 +10,107 @@ const updates = (await getCollection('updates')).sort(
 <html lang="no">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>AI-nyheter</title>
 	</head>
 	<body>
-		<h1>AI-nyheter</h1>
-		<ul>
-			{updates.map((update) => (
-				<li>
-					<h2>{update.data.title}</h2>
-					<p><strong>{update.data.company}</strong> — {update.data.date.toLocaleDateString('no-NO')}</p>
-					<p>{update.data.summary}</p>
-					<ul>
-						{update.data.links.map((link) => (
-							<li><a href={link.url}>{link.label}</a></li>
-						))}
-					</ul>
-				</li>
-			))}
-		</ul>
+		<main>
+			<h1>AI-nyheter</h1>
+			<div class="updates">
+				{updates.map((update) => (
+					<article class:list={['card', update.data.company]}>
+						<span class="badge">{update.data.company}</span>
+						<h2>{update.data.title}</h2>
+						<time>{update.data.date.toLocaleDateString('no-NO', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+						<p>{update.data.summary}</p>
+						<ul class="links">
+							{update.data.links.map((link) => (
+								<li><a href={link.url} target="_blank">{link.label} →</a></li>
+							))}
+						</ul>
+					</article>
+				))}
+			</div>
+		</main>
 	</body>
 </html>
+
+<style>
+	main {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem;
+	}
+	h1 {
+		font-size: 2rem;
+		margin-bottom: 2rem;
+	}
+	.updates {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+	.card {
+		position: relative;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		padding: 1.5rem;
+		border-left: 4px solid #555;
+	}
+	.card.anthropic { border-left-color: var(--color-anthropic); }
+	.card.google {
+		border-left: 4px solid transparent;
+	}
+	.card.google::before {
+		content: '';
+		position: absolute;
+		left: -4px;
+		top: -1px;
+		bottom: -1px;
+		width: 4px;
+		border-radius: 12px 0 0 12px;
+		background: linear-gradient(
+			to bottom,
+			#4285f4 0% 25%,
+			#ea4335 25% 50%,
+			#fbbc05 50% 75%,
+			#34a853 75% 100%
+		);
+	}
+	.card.openai { border-left-color: var(--color-openai); }
+	.badge {
+		text-transform: uppercase;
+		font-size: 0.75rem;
+		letter-spacing: 0.05em;
+		color: var(--color-muted);
+	}
+	.card h2 {
+		margin: 0.25rem 0 0.25rem;
+		font-size: 1.25rem;
+	}
+	time {
+		display: block;
+		font-size: 0.85rem;
+		color: var(--color-muted);
+		margin-bottom: 0.75rem;
+	}
+	.links {
+		list-style: none;
+		padding: 0;
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+		margin-top: 0.75rem;
+	}
+	.links a {
+		color: var(--color-link);
+		text-decoration: none;
+		font-size: 0.9rem;
+	}
+	.links a:hover {
+		text-decoration: underline;
+	}
+</style>

@@ -1,0 +1,23 @@
+:root {
+    --color-bg: #eaf4ec;
+    --color-surface: #ffffff;
+    --color-border: #cfe0d2;
+    --color-text: #1a1d24;
+    --color-muted: #5b6270;
+    --color-link: #1d6fd9;
+
+    --color-anthropic: #c9642f;
+    --color-google: #3367d6;
+    --color-openai: #05664a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    margin: 0;
+}
