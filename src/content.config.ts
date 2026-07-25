@@ -6,7 +6,7 @@ const updates = defineCollection({
     schema: z.object({
         title: z.string(),
         date: z.date(),
-        company: z.enum(["anthropic", "google", "openai"]),
+        company: z.enum(["anthropic", "google", "openai", "roundup"]),
         summary: z.string(),
         links: z
             .array(
