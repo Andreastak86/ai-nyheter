@@ -1,17 +1,34 @@
 ---
+import { getCollection } from 'astro:content';
 
+const updates = (await getCollection('updates')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
 ---
 
-<html lang="en">
+<html lang="no">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>AI-nyheter</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<h1>AI-nyheter</h1>
+		<ul>
+			{updates.map((update) => (
+				<li>
+					<h2>{update.data.title}</h2>
+					<p><strong>{update.data.company}</strong> — {update.data.date.toLocaleDateString('no-NO')}</p>
+					<p>{update.data.summary}</p>
+					<ul>
+						{update.data.links.map((link) => (
+							<li><a href={link.url}>{link.label}</a></li>
+						))}
+					</ul>
+				</li>
+			))}
+		</ul>
 	</body>
 </html>
