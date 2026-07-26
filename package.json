@@ -13,7 +13,6 @@
     "fetch-news": "node scripts/fetch-news.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.70.1",
     "astro": "^7.1.3"
   }
 }
